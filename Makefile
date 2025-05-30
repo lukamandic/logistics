@@ -1,4 +1,3 @@
-# Detect OS
 ifeq ($(OS),Windows_NT)
 	COPY_CMD = xcopy frontend\dist backend\static /E
 	RM_CMD = if exist backend\static rmdir /S /Q backend\static && if exist frontend\dist rmdir /S /Q frontend\dist
