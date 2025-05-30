@@ -57,7 +57,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install
+        run: cd frontend && pnpm install
 
       - name: Build frontend
         run: make build-frontend
