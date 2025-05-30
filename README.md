@@ -1,6 +1,6 @@
 # Logistics app
 
-Live preview:
+[Live preview](http://logistics-33102992.eu-central-1.elb.amazonaws.com/)
 
 ## Architecture
 
@@ -38,3 +38,5 @@ cd .. && go run cmd/main.go
 ```
 
 ## Depoloyment
+
+The app is deployed in a AWS ECS cluster.
