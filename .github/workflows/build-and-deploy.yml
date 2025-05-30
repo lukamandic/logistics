@@ -72,20 +72,21 @@ jobs:
         run: |
           echo "Verifying AWS credentials..."
           aws sts get-caller-identity
-          echo "Listing ECR repositories..."
-          aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY }} --query 'repositories[0].repositoryUri' --output text
-          echo "Getting ECR login token..."
-          aws ecr get-login-password --region ${{ env.AWS_REGION }}
+          echo "Listing public ECR repositories..."
+          aws ecr-public describe-repositories --query 'repositories[*].[repositoryName,repositoryUri]' --output table
+          echo "Repository name from secret: ${{ secrets.ECR_REPOSITORY }}"
 
-      - name: Login to Amazon ECR
+      - name: Login to Amazon Public ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: public
 
       - name: Verify ECR login
         run: |
-          echo "ECR Registry: ${{ steps.login-ecr.outputs.registry }}"
+          echo "Public ECR Registry: public.ecr.aws"
           echo "Repository: ${{ secrets.ECR_REPOSITORY }}"
-          echo "Full image name: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
+          echo "Full image name: public.ecr.aws/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -96,8 +97,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
+            public.ecr.aws/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            public.ecr.aws/${{ secrets.ECR_REPOSITORY }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
