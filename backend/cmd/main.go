@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -52,6 +53,13 @@ func main() {
 
 	serverAddr := fmt.Sprintf(":%s", cfg.ServerPort)
 	fmt.Printf("Starting HTTP server on %s...\n", serverAddr)
+
+	fmt.Println("VITE_API_BASE_URL", os.Getenv("VITE_API_BASE_URL"))
+	fmt.Println("UI_URL", os.Getenv("UI_URL"))
+	fmt.Println("SERVER_PORT", os.Getenv("SERVER_PORT"))
+	fmt.Println("TABLE_NAME", os.Getenv("TABLE_NAME"))
+	fmt.Println("AWS_REGION", os.Getenv("AWS_REGION"))
+
 	if err := http.ListenAndServe(serverAddr, handler); err != nil {
 		log.Fatalf("ListenAndServe error: %v", err)
 	}
